@@ -30,10 +30,10 @@ def queryString(dict,status):
 
     if 'minHeight' in dict or 'maxHeight'in dict :
         queryLength = Q()
-        if dict['minHeight'] in dict :
+        if 'minHeight' in dict :
             query &= Q(height__gte=dict['minHeight'])
 
-        if dict['maxHeight'] in dict :
+        if 'maxHeight' in dict :
             query &= Q(height__lte=dict['maxHeight'])
         
         if dict['minHeight'] > dict['maxHeight']:
