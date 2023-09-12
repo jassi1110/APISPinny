@@ -48,7 +48,7 @@ class BoxUpdateSerializer(serializers.ModelSerializer):
     def update(self,instance,validated_data):
         area = validated_data['length']*validated_data['breadth']
         volume = validated_data['length']*validated_data['breadth']*validated_data['height']
-        # box = Box.objects.get(id=validated_data['id'])
+
         instance.length = validated_data['length']
         instance.breadth = validated_data['breadth']
         instance.height = validated_data['height']

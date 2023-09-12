@@ -85,7 +85,7 @@ def listBoxes(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def listMyBoxes(request):
-    # user = CustomUser.objects.get(id=1)
+
     query_params_dict = request.GET.dict()
 
     filterQuery = queryString(query_params_dict,False)
@@ -132,12 +132,15 @@ def deleteBox(request):
     try:
         user = request.user
         if user.is_user_staff:
-            box = Box.objects.get(id=request.data['id'])
-            if box.creator.id == user.id:
-                box.delete()
-                return Response({"success":True,"message":"Box deleted Successfully"},status=200)
+            box = Box.objects.filter(id=request.data['id'])
+            if box:
+                if box.creator.id == user.id:
+                    box.delete()
+                    return Response({"success":True,"message":"Box deleted Successfully"},status=200)
+                else:
+                    return Response({"success":False,"message":"You are not eligible to delete box"},status=404)
             else:
-                return Response({"success":False,"message":"You are not eligible to delete box"},status=404)
+                return Response({"success":False,"message":"Box not found"},status=404)
     except Exception as e:
         error_message = "Box not found"
-        return Response({"error": error_message or str(e)}, status=500)
+        return Response({"error": str(e) or error_message}, status=500)
