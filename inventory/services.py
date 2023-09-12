@@ -1,7 +1,8 @@
 from inventory.models import Box
 from django.db.models import Q
+from datetime import datetime
 
-def queryString(dict):
+def queryString(dict,status):
     query = Q()
     if 'minLength' in dict or 'maxLength' in dict:
         queryLength = Q()
@@ -44,26 +45,26 @@ def queryString(dict):
 
     if 'minVolume' in dict or 'maxVolume'in dict :
         queryLength = Q()
-        if dict['minVolume'] in dict:
+        if 'minVolume' in dict:
             query |= Q(area__gte=dict['minVolume'])
 
-        if dict['maxVolume'] in dict:
+        if 'maxVolume' in dict:
             query |= Q(area__lte=dict['maxVolume'])
         query &= queryLength
 
-    if 'userId' not in dict:
+    if status:
         if 'startDate' in dict or 'endDate'in dict :
             queryLength = Q()
-            if dict['startDate'] in dict:
-                query |= Q(created_at__gte=dict['startDate'])
+            if 'startDate' in dict:
+                startDate = datetime.strptime(dict['startDate'], '%d/%m/%y')
+                query |= Q(created_at__gte=startDate)
 
-            if dict['endDate'] in dict:
-                query |= Q(created_at__lte=dict['endDate'])
+            if 'endDate' in dict:
+                endDate = datetime.strptime(dict['endDate'], '%d/%m/%y')
+                query |= Q(created_at__lte=endDate)
             query &= queryLength
 
         if 'createdBy' in dict:
             query &= Q(created_by=dict['createdBy'])
-
-    print(query)
 
     return query

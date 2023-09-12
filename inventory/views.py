@@ -75,7 +75,7 @@ def createBox(request):
 def listBoxes(request):
     query_params_dict = request.GET.dict()
 
-    boxes = Box.objects.filter(queryString(query_params_dict))
+    boxes = Box.objects.filter(queryString(query_params_dict,True))
     serializer = BoxReadSerializer(boxes,context={'request': request},many=True)
     res = [ele for ele in ({key: val for key, val in sub.items() if val}
                        for sub in serializer.data) if ele]
@@ -88,7 +88,7 @@ def listMyBoxes(request):
     # user = CustomUser.objects.get(id=1)
     query_params_dict = request.GET.dict()
 
-    boxes = request.user.box_set.filter(queryString(query_params_dict))
+    boxes = request.user.box_set.filter(queryString(query_params_dict,False))
     serializer = BoxReadSerializer(boxes,context={'request': request},many=True)
     res = [ele for ele in ({key: val for key, val in sub.items() if val}
                        for sub in serializer.data) if ele]
