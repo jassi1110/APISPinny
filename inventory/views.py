@@ -135,5 +135,5 @@ def deleteBox(request):
             else:
                 return Response({"success":False,"message":"You are not eligible to delete box"},status=404)
     except Exception as e:
-        error_message = "Error raised"
-        return Response({"error": str(e) or error_message}, status=500)
+        error_message = "Box not found"
+        return Response({"error": error_message or str(e)}, status=500)
