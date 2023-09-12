@@ -75,7 +75,13 @@ def createBox(request):
 def listBoxes(request):
     query_params_dict = request.GET.dict()
 
-    boxes = Box.objects.filter(queryString(query_params_dict,True))
+    filterQuery,status = queryString(query_params_dict,False)
+    if filterQuery is not None:
+        boxes = Box.objects.filter(filterQuery)
+    elif filterQuery is None and status:
+        return Response({"success":False,"message":"Input Values are out wrong"},status=500)
+    else:
+        boxes = Box.objects.all()
     serializer = BoxReadSerializer(boxes,context={'request': request},many=True)
     res = [ele for ele in ({key: val for key, val in sub.items() if val}
                        for sub in serializer.data) if ele]
@@ -88,9 +94,15 @@ def listMyBoxes(request):
 
     query_params_dict = request.GET.dict()
 
-    filterQuery = queryString(query_params_dict,False)
+    filterQuery,status = queryString(query_params_dict,False)
+
+    print("**************")
+    print(filterQuery)
+    print(status)
     if filterQuery is not None:
         boxes = request.user.box_set.filter(queryString(query_params_dict,False))
+    elif filterQuery is None and status:
+        return Response({"success":False,"message":"Input Values are out wrong"},status=500)
     else:
         boxes = request.user.box_set.filter()
     serializer = BoxReadSerializer(boxes,context={'request': request},many=True)
