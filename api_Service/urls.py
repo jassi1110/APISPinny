@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework.authtoken.views import obtain_auth_token
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', obtain_auth_token, name='token_obtain_pair'),
     path('', include('inventory.urls')),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
