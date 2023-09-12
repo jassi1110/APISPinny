@@ -60,7 +60,6 @@ def createBox(request):
             request.data['creator'] = user.id
             serializer = BoxCreateSerializer(data=request.data)
             if serializer.is_valid():
-                print(serializer)
                 serializer.save()
             return Response({"success":True,"data":serializer.data},status=200)
         else:
@@ -96,15 +95,13 @@ def listMyBoxes(request):
 
     filterQuery,status = queryString(query_params_dict,False)
 
-    print("**************")
-    print(filterQuery)
-    print(status)
     if filterQuery is not None:
         boxes = request.user.box_set.filter(queryString(query_params_dict,False))
     elif filterQuery is None and status:
         return Response({"success":False,"message":"Input Values are out wrong"},status=500)
     else:
         boxes = request.user.box_set.filter()
+
     serializer = BoxReadSerializer(boxes,context={'request': request},many=True)
     res = [ele for ele in ({key: val for key, val in sub.items() if val}
                        for sub in serializer.data) if ele]

@@ -3,9 +3,6 @@ from django.db.models import Q
 from datetime import datetime
 
 
-def lengthFilter(dict,status):
-    query = Q()
-    
 def queryString(dict,status):
     query = Q()
     if 'minLength' in dict or 'maxLength' in dict:
@@ -18,10 +15,6 @@ def queryString(dict,status):
         
         # if 'minLength' in dict and 'maxLength' in dict and dict['minLength'] > dict['maxLength']:
         #     return None,True
-        
-        print("HELLO World")
-        print(queryLength)
-        query |= queryLength
 
     if 'minBreadth' in dict or 'maxBreadth' in dict :
         queryLength = Q()
@@ -33,10 +26,6 @@ def queryString(dict,status):
 
         if 'minBreadth'in dict :
             queryLength &= Q(breadth__gte=dict['minBreadth'])
-        
-        print("HELLO HELL")
-        print(queryLength)
-        
         query |= queryLength
 
     if 'minHeight' in dict or 'maxHeight'in dict :
@@ -94,8 +83,6 @@ def queryString(dict,status):
         if 'createdBy' in dict:
             query |= Q(created_by=dict['createdBy'])
 
-    
-    print(query)
     if query:
         return query,True
     else:
