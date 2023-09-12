@@ -14,7 +14,7 @@ def queryString(dict,status):
         
         if 'minLength' in dict and 'maxLength' in dict and dict['minLength'] > dict['maxLength']:
             return None
-        query &= queryLength
+        query |= queryLength
 
     if 'minBreadth' in dict or 'maxBreadth' in dict :
         queryLength = Q()
@@ -26,7 +26,7 @@ def queryString(dict,status):
         
         if 'minBreadth' in dict and 'maxBreadth' in dict and dict['minBreadth'] > dict['maxBreadth']:
             return None
-        query &= queryLength
+        query |= queryLength
 
     if 'minHeight' in dict or 'maxHeight'in dict :
         queryLength = Q()
@@ -38,7 +38,7 @@ def queryString(dict,status):
         
         if 'minHeight' in dict and 'maxHeight' in dict and dict['minHeight'] > dict['maxHeight']:
             return None
-        query &= queryLength
+        query |= queryLength
 
     if 'minArea' in dict or 'maxArea'in dict :
         queryLength = Q()
@@ -50,7 +50,7 @@ def queryString(dict,status):
             
         if 'minArea' in dict and 'maxArea' in dict and dict['minArea'] > dict['maxArea']:
             return None
-        query &= queryLength
+        query |= queryLength
 
     if 'minVolume' in dict or 'maxVolume'in dict :
         queryLength = Q()
@@ -62,7 +62,7 @@ def queryString(dict,status):
 
         if 'minVolume' in dict and 'maxVolume' in dict and dict['minVolume'] > dict['maxVolume']:
             return None
-        query &= queryLength
+        query |= queryLength
 
     if status:
         if 'startDate' in dict or 'endDate'in dict :
@@ -74,11 +74,11 @@ def queryString(dict,status):
             if 'endDate' in dict:
                 endDate = datetime.strptime(dict['endDate'], '%d/%m/%y')
                 query &= Q(created_at__lte=endDate)
-            query &= queryLength
+            query |= queryLength
 
             if 'startDate' in dict and 'endDate' in dict and startDate > endDate:
                 return None
         if 'createdBy' in dict:
-            query &= Q(created_by=dict['createdBy'])
+            query |= Q(created_by=dict['createdBy'])
 
     return query
