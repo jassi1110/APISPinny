@@ -64,4 +64,6 @@ def queryString(dict):
         if 'createdBy' in dict:
             query &= Q(created_by=dict['createdBy'])
 
+    print(query)
+
     return query
